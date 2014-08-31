@@ -1,0 +1,100 @@
+div{
+  font-size: 12px;
+  font-family: sans-serif;
+}
+h1{
+  font-size: 150%;
+}
+h2{
+  font-size: 130%;
+}
+h3{
+  font-size: 110%;
+}
+h5{
+  font-size: 100%;
+  margin-top: .5em;
+  margin-bottom: 0;
+}
+ul{
+  margin-top: 0;
+  margin-bottom: 0;padding-left: 2em;text-indent: -1em;
+  list-style-type: none;
+}
+ul li{
+  position: relative;
+}
+ul li:before{
+  position: absolute;left: -.75em;top:-.15em;
+  content: "-";
+}
+#top{
+  text-align: center;
+  margin-bottom: .5em;
+}
+#top>*{
+  width: 33.33%;
+  display: inline-block;
+  vertical-align: top;
+  min-width: 175px;
+}
+#top>div:first-child{
+  text-align: left;
+  color:#888888;
+}
+#top>div:last-child{
+  text-align: right;
+  color:#888888;
+}
+#top h1{
+  margin-top: 0;
+}
+.rrow{
+  margin: .5em;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.rrow:first-child{
+  margin-top: 1em;
+}
+.rrow>div,.inrow>div{
+  display: inline-block;
+}
+.rrow>div.stitle{
+  min-width: 120px;
+  width: 22.5%;vertical-align: top;
+}
+.stitle h2{
+  margin-top: 0;
+}
+.rrow>div.sbody{
+  width: 77.5%;
+}
+.rrow>div.stime{
+  width: 15%;min-width: 70px;
+  font-style: italic;
+}
+.inrow{
+  margin-bottom: .75em;
+}
+.inrow .wleft{
+  width: 80%;
+}
+.inrow .wbody{
+  padding-left: 1em;
+}
+.inrow .wtime{
+  width: 20%;
+  text-align: right;
+  vertical-align: top;
+}
+.inrow .wtitle{
+  display: block;
+}
+.inrow .wtitle *{
+  margin-top: 0;
+  margin-bottom: .5em;
+}
+.indent{
+  padding-left: 1em;
+}
