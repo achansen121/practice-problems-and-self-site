@@ -151,6 +151,8 @@ index_controller.gen_jsmtime=function(index_html,root,flist,req,res,prev_times){
   if(flist.length>0){
     var fl,f_cached_time;
     for (var i = 0; i < 1000; i++) {
+      if(flist.length==0)
+        break;
       fl=flist.pop();
       f_cached_time=index_controller.gen_jsmtime.cache;
       if(f_cached_time&&f_cached_time.recorded_time-10000<(new Date()).getTime()){
