@@ -116,7 +116,7 @@ var index_controller=function(req,res,tries){
     res.writeHead(200,{"Content-Type":"text/html"});
 
     var static_root="static/";
-    var static_f_list=["f.js","lib/fix_object_keys.js","lib/sha1.js","data_structures.js","algo.js","practice_problems.js","lib/core.js"];
+    var static_f_list=["f.js","simple.js","lib/fix_object_keys.js","lib/sha1.js","data_structures.js","algo.js","practice_problems.js","lib/core.js","data/words-en.txt"];
 
     var index_html=index_page.toString();
 
@@ -158,13 +158,20 @@ index_controller.gen_jsmtime=function(index_html,root,flist,req,res,prev_times){
       if(f_cached_time&&f_cached_time.recorded_time-10000<(new Date()).getTime()){
         prev_times["/"+root+fl]=f_cached_time.time_stamp;
       } else{
-        fs.stat(root+fl,function(err,stats){
-          if(err)
-            throw err;
-          index_controller.gen_jsmtime.cache[root+fl]={recorded_time:(new Date()).getTime(),time_stamp:stats.mtime.getTime()};
-          prev_times["/"+root+fl]=stats.mtime.getTime();
-          index_controller.gen_jsmtime(index_html,root,flist,req,res,prev_times);
-        });
+        if(index_controller.gen_jsmtime.stating[root+fl])
+          setTimeout(function(){
+            index_controller.gen_jsmtime(index_html,root,flist,req,res,prev_times);
+          },100);
+        else{
+          index_controller.gen_jsmtime.stating[root+fl]=true;
+          fs.stat(root+fl,function(err,stats){
+            index_controller.gen_jsmtime.stating[root+fl]=false;
+            if(err)
+              throw err;
+            index_controller.gen_jsmtime.cache[root+fl]={recorded_time:(new Date()).getTime(),time_stamp:stats.mtime.getTime()};
+            prev_times["/"+root+fl]=stats.mtime.getTime();
+            index_controller.gen_jsmtime(index_html,root,flist,req,res,prev_times);
+          });}
         return;
       }
     };
@@ -195,11 +202,11 @@ index_controller.gen_jsmtime.stating={};
 
 var route=function(url){
   console.log("request "+url);
-  if(/^\/static\/.*\.(j|cs)s(\?v=\d+)?/.test(url)){
+  if(/^\/static\/.*\.(js|css|txt)(\?v=\d+)?/.test(url)){
     return static_controller;
   } else if(/^\/$/.test(url)){
     return index_controller;
-  } else if(/^favicon.ico$/.test(url)){
+  } else if(/^\/favicon.ico$/.test(url)){
     return function(req,res){return error_controller(req,res,{status:404,errtxt:"404 Not Found",suppress:true});};
   }else{
     return function(req,res){return error_controller(req,res,{status:404,errtxt:"404 Not Found"});};

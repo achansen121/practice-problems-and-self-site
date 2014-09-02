@@ -8,6 +8,8 @@ else
   g.f.algo=algo;
 
 algo.qsort=function(arr,compare){
+  if(compare===undefined)
+    compare=this.qsort.compare;
   var min=0;var max=arr.length-1;
   var todolist=[];
   todolist.push([min,max]);
@@ -15,7 +17,7 @@ algo.qsort=function(arr,compare){
   while(todolist.length>0){
     var task=todolist.shift();
     var min=task[0];var max=task[1];
-    var ploc=algo.qsort.splitonpivot(arr,min,max,compare);
+    var ploc=algo.qsort.split_on_pivot(arr,min,max,compare);
     if(ploc!=min&&ploc-1!=min){
       todolist.push([min,ploc-1]);
     }
@@ -25,6 +27,67 @@ algo.qsort=function(arr,compare){
   
   return arr;
 };
+algo.qsort.split_on_pivot=function(arr,min,max,compare){
+  var n=1;
+  var r=.45+(0.05*algo.qsort.rand_int(3));
+  var pivotindex=min+Math.floor(r*((max-min)+1));
+  var pivotval=arr[pivotindex];
+  this.swap(arr,pivotindex,max);
+
+
+  var storeindex=min;
+  for (var i = min; i < max; i++) {
+    var cr=compare(arr[i],pivotval);
+    if(cr<0){
+      this.swap(arr,i,storeindex);
+      storeindex+=1;}
+  };
+  this.swap(arr,storeindex,max);
+  return storeindex;
+};
+algo.qsort.split_on_pivot_2=function(arr,min,max,cmp){
+  var n=1;
+  var r=.45+(0.05*algo.qsort.rand_int(3));
+  var pivotindex=min+Math.floor(r*((max-min)+1));
+  var pivotval=arr[pivotindex];
+  var i=min;var j=max;
+  var found;
+
+  var toolong=10*arr.length;
+  var check_toolong=function(){
+    if(toolong==0)
+      throw f.trace_gen("toolong");
+    else
+      toolong--;
+  };
+  console.log(pivotval+"pivotval");
+  console.log(arr);
+  for(;i<=j;){
+    found=true;
+    for(;cmp(arr[i],pivotval)<0;){
+      i++;
+      check_toolong();
+    }
+    for(;cmp(arr[j],pivotval)>0;){
+      j--;
+      check_toolong();
+    }
+    if(i<=j){
+      this.swap(arr,i,j);
+      i++;
+      j--;
+    }
+    check_toolong();
+    console.log(arr,i,j,min,max);
+  }
+  console.log(Math.min(i,max)+"pindex");
+  return Math.min(i,max);
+
+  return storeindex;
+};
+
+
+
 algo.__generic_sort_benchmark__=function(n,name){
   if(n==undefined)n=1000;
   var t=algo[name].gentestlist(n);
@@ -57,7 +120,18 @@ algo.__generic_sort_benchmark__=function(n,name){
 algo.qsort.benchmark=function(n){
   return algo.__generic_sort_benchmark__(n,"qsort");
 };
-
+algo.qsort.rand_int=function(n){
+  var r=algo.qsort.rand_int.leftover;
+  if(r.used*n>=Math.pow(10,17)){
+    r.used=1;
+    r.n=Math.random();}
+  r.n*=n;
+  r.used*=n;
+  var new_rand=Math.floor(r.n);
+  r.n=r.n%1;
+  return new_rand;
+};
+algo.qsort.rand_int.leftover={n:1,used:Math.pow(10,17)}
 
 algo.qsort.gentestlist=function(n){
   if(n==undefined)
@@ -80,29 +154,6 @@ algo.qsort.compare=function(lv,rv){
 algo.qsort.swap=function(a,i,j){
   var tmp=a[i];
   a[i]=a[j];a[j]=tmp;
-};
-algo.qsort.splitonpivot=function(arr,min,max,compare){
-  if(compare==undefined)
-    compare=this.compare;
-  if(min==undefined)
-    min=0;
-  if(max==undefined)
-    max=arr.length-1;
-  var n=1;
-  var r=.5;
-  var pivotindex=min+Math.floor(r*((max-min)+1));
-  var pivotval=arr[pivotindex];
-  this.swap(arr,pivotindex,max);
-
-  var storeindex=min;
-  for (var i = min; i < max; i++) {
-    var cr=compare(arr[i],pivotval);
-    if(cr<0){
-      this.swap(arr,i,storeindex);
-      storeindex+=1;}
-  };
-  this.swap(arr,storeindex,max);
-  return storeindex;
 };
 algo.msort=function(arr,compare){
   x=0;y=arr.length-1;

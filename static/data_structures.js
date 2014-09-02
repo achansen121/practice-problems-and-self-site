@@ -170,9 +170,147 @@ data_structures.heap.pop=function(hh,compare){
 
 
 
+var btree={};
 
+//at most m children
+//non-leaf nodes have at least m/2 children
+//root has two children if not leaf node
+//non leaf node with k children contains k-1 keys
+//all leaves same level
 
+btree.gen=function(o){
+  eval(opt_eval_str("{data:[],max_child:3,cmp:btree.default_compare}"));
 
+  var order=max_child;
+  var item_min=Math.floor(max_child/2);
+  var item_max=item_min*2;
+  var min_children=Math.ceil(max_child/2);
+
+  var root=btree.__gen_node__();
+  root.is_root=true;
+  root.order=order;
+
+  for (var i = 0; i < 1000; i++) {
+    d1=data.shift();
+    btree.add_element(root,d1);
+  };
+
+};
+
+btree.add_element=function(root,d1){
+  var d1,pos,new_items,f_items;
+  var focused_node,current_data;
+
+  focused_node=root;
+  f_items=focused_node.items;
+
+  pos=btree.__find_pos(f_items,d1);
+  if(pos==="is a copy")
+    throw f.trace_gen(pos);
+
+  if(focused_node.is_leaf&&f_items.length<item_max){
+    focused_node.items=btree.__insert_value_at_pos(f_items,pos,d1);
+    return;
+  } else if(focused_node.is_leaf&&f_items.length==item_max){
+    focused_node.items=btree.__insert_value_at_pos(f_items,pos,d1);
+    btree.__fix_excess__(focused_node,root.order);
+  }
+};
+
+btree.__fix_excess__=function(nd,order){
+  if(nd.is_root!==true){
+    var mid=Math.floor(nd.items.length/2);
+    var v_to_up=nd.items.unshift(min);
+
+    var v_left=nd.items.slice(0,mid);
+    var v_right=nd.items.slice(mid,nd.items.length-1);
+
+    var new_left=btree.__gen_node__();
+    var new_right=btree.__gen_node__();
+
+    throw f.trace_gen("TODO");
+    //btree.__put_in_i_array__(nd.parent.items,)
+  }
+  else{
+    var new_root=btree.__gen_node__();
+    new_root.is_leaf=false;
+    delete root.is_root;
+    root.parent=new_root;
+    new_root.is_root=true;
+    new_root.order=root.order;
+    delete root.order;
+    new_root.children.push(root);
+    btree.__fix_excess__(root,v_to_up,root.order);
+  }
+};
+
+btree.__gen_node__=function(){
+  return {is_leaf:true,children:[],items:[]};;
+}
+
+btree.__branch_node=function(nd,v,order){
+  var c_ranges=[],ind;
+  var min_c=Math.ceil(order/2);
+  var v_retain=[];
+  var split_loc;
+  for (var i = 0; i < min_c; i++) {
+    ind=i*Math.floor(nd.items.length/min_c);
+
+    split_loc=ind+nd.items.length/min_c;
+
+    c_ranges.push(nd.items.slice(ind,split_loc-2));
+    v_retain.push(nd.items.slice(ind+split_loc-1,ind+split_loc));
+  };
+
+  var first_and_last=function(arr){
+    return [arr[0],arr[arr.length-1]];
+  };
+
+  var clisting;
+  nd.items=[];
+  nd.children=[];
+  for (var i = 0; i < c_ranges.length; i++) {
+    clisting={node:btree.__gen_node__(nd.level+1),range:v_retain[i]};
+    clisting.node.items=c_ranges[i].slice();
+    nd.children.push(clisting);
+  };
+
+};
+
+btree.default_compare=function(a,b){
+  if(typeof b==typeof 1)
+    return (b-a);
+  else if(typeof b==typeof "")
+    return b.toLowerCase().charAt()-a.toLowerCase().charAt();
+  else if(value in b && value in a)
+    return btree.default_compare(b.value,a.value);
+  else
+    throw f.trace_gen("compare not implemented");
+};
+
+btree.__put_in_i_array__=function(items,new_item){
+  var pos=__find_pos(items,new_item);
+
+  return btree.__insert_value_at_pos(items,pos,new_item);
+};
+
+btree.__find_pos=function(items,new_item){
+  for (var j = 0; j < items.length; j++) {
+    if(cmp(new_item,items[j]))
+      return "is a copy";
+    if(cmp(new_item,items[j])<0){
+      break;
+    }
+  };
+  return j;
+}
+btree.__insert_value_at_pos=function(f_items,pos,d1){
+  new_items=f_items.slice(0,pos).push(d1);
+  new_items=new_items.concat(f_items.slice(pos,f_items.length));
+  focused_node.items=new_items;
+}
+
+data_structures.btree=btree;
 
 
 
@@ -207,6 +345,25 @@ data_structures.bst.make=function(o){
   };
   return bst;
 };
+
+data_structures.bst.contains=function(o){
+  eval(f.opt_eval_str("{e:undefined,bst:undefined,cmp:undefined}"));
+
+  var focused_node=bst;
+  for (var i = 0; i < 1000; i++) {
+    if(focused_node===null)
+      break;
+
+    var compart=cmp(e,o.value);
+    if(compart===0)
+      return true;
+    else if(compart<0)
+      focused_node=bst.left;
+    else if(compart>0)
+      focused_node=bst.right;
+  };
+};
+
 data_structures.bst.add=function(o){
   eval(f.opt_eval_str("{e:undefined,bst:undefined,cmp:undefined}"));
 

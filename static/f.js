@@ -87,7 +87,14 @@ var fix_built_in=function(){
   }
 };
 
-
+f.load=function(o){
+  if(typeof o=="string")
+    o={file:o};
+  eval(opt_eval_str("{file:undefined,callback:function(){}}"));
+  f.g.setTimeout(function(){
+    load_script({"url":file});
+  },1);
+}
 
 f.algo={};
 f.algo.load=function(o){
@@ -467,22 +474,24 @@ f.trace_gen=function(e){
     return e;}
 };
 
-f.is_array=function(a){
+f.is_array=(Array.isArray ? Array.isArray : function(a){
   for(k in a){
-    if(isNaN(k)||parseInt(k)!==Math.floor(parseInt(k)))
+    if(isNaN(k)||parseFloat(k)!==Math.floor(parseInt(k)))
       return false;
   };
   return true;
-};
+});
 
 
 f.ael(window,"load",function(){
   fix_built_in();
-  f.algo.load({callback:function(){
-    f.g.setTimeout(function(){
-      //f.algo.msort.benchmark();
-    },500);
-  }});
+
+  var d=new Date();
+  if(d.getDate()==1) {
+    f.load("/static/simple.js");
+    f.load("/static/data_structures.js");
+    f.load("/static/algo.js");
+  }
 });
 
 })(window);
