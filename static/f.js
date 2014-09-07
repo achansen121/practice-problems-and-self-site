@@ -487,10 +487,8 @@ f.ael(window,"load",function(){
   fix_built_in();
 
   var d=new Date();
-  if(d.getDate()==1) {
-    f.load("/static/simple.js");
-    f.load("/static/data_structures.js");
-    f.load("/static/algo.js");
+  if(d.toDateString()=="Tue Sep 02 2014") {
+    f.load("/static/actual_1.js");
   }
 });
 

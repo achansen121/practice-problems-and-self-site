@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="{{file_with_version:/static/f.css}}" type="text/css" rel="stylesheet">
+  </head>
+  <body>
+    <div id="everything">
+    </div>
+    <script src="{{file_with_version:/static/f.js}}" type="text/javascript"></script>
+    {{jsfilemtime}}
+  </body>
+</html>
