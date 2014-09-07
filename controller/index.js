@@ -63,11 +63,14 @@ var index_controller=(function(){
     /*                                                                          */var at_pm=promise(i_promises,"all_times");
     /*                                                                          */at_pm.ensure_terminate(function(){
     var f_iter=Object.keys(static_f_list);
+
     var all_times={gathered_n:0,times:{},max:f_iter.length};
     for (var i = 0; i < f_iter.length; i++) {
       var fname=static_root+f_iter[i];
       /*                                                                        */var np=promise(i_promises,"stat_promise for "+fname);
+                                                                                
       /*                                                                        */np.ensure_terminate(function(){
+      console.log("reading "+fname);
       var associate_name=(function(p,nm){return function(err,stats){
           stats.fname=nm;
           p.finish(err,stats,{dt:ctime});
