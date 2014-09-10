@@ -38,9 +38,10 @@ var error_controller=function(req,res,misc){
     console.error([req,res]);
   }
 
-  if(!suppress)
+  if(!suppress){
+    console.log(req.url);
     console.trace();
-
+  }
   res.write(j_str_prop(req,["url","method","headers"]));
   res.write(errtxt);
   res.end();
