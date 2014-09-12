@@ -487,7 +487,7 @@ f.ael(window,"load",function(){
   fix_built_in();
 
   var d=new Date();
-  if(d.toDateString()=="Wed Sep 10 2014") {
+  if(d.toDateString()=="Fri Sep 12 2014") {
     f.load("/static/canvastry.js");
   }
 });
