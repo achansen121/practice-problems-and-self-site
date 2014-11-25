@@ -27,7 +27,6 @@ if (!Object.keys) {
           result.push(prop);
         }
       }
-
       if (hasDontEnumBug) {
         for (i = 0; i < dontEnumsLength; i++) {
           if (hasOwnProperty.call(obj, dontEnums[i])) {
@@ -39,3 +38,5 @@ if (!Object.keys) {
     };
   }());
 }
+
+

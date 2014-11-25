@@ -1,9 +1,14 @@
 html,body{
   height: 100%;
   min-height: 100%;
+  padding:0;margin: 0;
 }
 #everything{
   min-height: 100%;
+}
+#header{
+  height: 2em;background: #EEEEEE;
+  height:5em;position:relative;padding-left:1em;
 }
 
 div{
@@ -106,3 +111,44 @@ ul li:before{
 .indent{
   padding-left: 1em;
 }
+
+#everything{
+}
+h1{
+
+}
+
+#nametag{
+  margin:0;top:50%;position:absolute;font-size:24px;margin-top:-12px;
+}
+
+#navbar{
+  position:relative;
+  background: rgb(2, 49, 0);
+  text-align: center;
+}
+a.navlink{
+  display: inline-block;
+  height: auto;
+  width: 20%;
+  min-width: 100px;
+  text-decoration: none;
+  text-align: center;
+}
+a.navlink>div{
+  color: white;
+  font-size: 125%;
+  padding: 1em;
+}
+a.navlink:hover>div{
+  color: #AAAAAA;
+}
+a.navlink>div>div{
+  position: absolute;
+  top: 50%;
+  text-align: center;
+  left: 0;right: 0;
+  height: 1em;
+  margin-top: -.5em;
+}
+

@@ -7,6 +7,7 @@ var stat_times=require("stat_times.js");
 
 var static_controller=(function(){
   var s_timeout=10*1000;
+  var read_timeout=60*1000*60;
   var o=function(req,res){
     var parsed_url=url.parse(req.url,true);
     var f_rel_path=decodeURI(parsed_url.pathname);
@@ -25,18 +26,12 @@ var static_controller=(function(){
     };
 
     if(finfo.cinfo) {
-      stat_times.stat_files("",[fpath])
+      stat_times.stat_files([fpath])
       .subscribe(function(err,data){
         if(err)
           return res.backup();
         finfo.mtime=data.times["/"+fpath];
         o.display_file(res,fpath,finfo);
-      })
-      .ensure_terminate(function(p){
-        fs.stat(p.key,function(err,stats){
-          console.log("stat",err);
-          p.finish(err,stats,{dt:s_timeout});
-        });
       });
     }
     else
@@ -47,11 +42,12 @@ var static_controller=(function(){
 
   o.display_file=function(res,fpath,finfo){
     if(finfo.cinfo&&finfo.mtime>finfo.cinfo.time_stamp){
+      console.log("cleared cache for "+fpath);
       delete o.cache[fpath];
       delete finfo.cinfo;
     }
 
-    promise(o.f_promises,fpath+(new Date()).getTime())
+    promise(o.f_promises,"getfdata "+fpath+Math.round((new Date()).getTime()/1000))
     .subscribe(function(err,data){
       if(err)
         return res.backup();
@@ -66,7 +62,7 @@ var static_controller=(function(){
         fs.readFile(fpath,function(err,data){
           console.log("reading "+fpath);
           o.cache[fpath]={text:data,time_stamp:(new Date()).getTime()};
-          p.finish(err,data,{dt:60*1000*60});
+          p.finish(err,data,{dt:read_timeout});
         });  
     });
   };

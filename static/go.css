@@ -1,0 +1,75 @@
+
+
+#goboard{
+  width:64em;height:64em;display:inline-block;background:rgb(255, 233, 165);
+  position: relative;
+}
+.gorows{
+  height: 100%;
+}
+.gorows>div{
+  height:6.25%;position:relative;
+  white-space: nowrap;
+}
+.gorows>div>div{
+  white-space: normal;
+}
+
+.gorows>div>div.rline{
+  display: none;
+  height:1px;background:black;top:50%;left:2em;right:2em;margin-top:-.5px;position:absolute;
+}
+.gorows>div>div{
+  display: inline-block;
+  height: 100%;width: 6.25%;
+  position: relative;
+}
+.gorows .vert{
+   width: 1px;background: black;top:0;bottom:0;left: 50%;margin-left: -.5px;position: absolute;
+}
+.gorows .hori{
+   height: 1px;background: black;left:0;right:0;top: 50%;margin-top: -.5px;position: absolute;
+}
+.gorows>div:first-child .vert{
+  top:50%;
+}
+.gorows>div:last-child .vert{
+  bottom:50%;
+}
+.gorows>div>div:first-child .hori{
+  left:50%;
+}
+.gorows>div>div:last-child>div.hori{
+  right:50%;
+}
+#goboard{
+  cursor: default;
+}
+#goboard *::selection{
+  background: none;
+}
+
+#goboard .potential_move, #goboard .actual_move{
+  height:100%;
+  width:100%;
+  position: relative;
+  z-index: 1;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 80% 80%;
+}
+
+#goboard .potential_move{
+  opacity:.2;
+  cursor: pointer;
+}
+
+.potential_move.black, .actual_move.black{
+  background-image: url("/static/img/goblack.svg");
+}
+.potential_move.white, .actual_move.white{
+  background-image: url("/static/img/gowhite.svg");
+}
+#goboard .potential_move.white{
+  opacity: .6;
+}

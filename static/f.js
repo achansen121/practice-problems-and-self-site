@@ -482,14 +482,50 @@ f.is_array=(Array.isArray ? Array.isArray : function(a){
   return true;
 });
 
+var last_listen=false;
+
+f.listen_for_changes=function(){
+  if(last_listen)
+    last_listen.abort();
+
+  var scripts=document.querySelectorAll("script");
+  var styles=document.querySelectorAll("link");
+  var imgs=document.querySelectorAll("img");
+
+  var dataobj={};
+  f.freach([[scripts,"src"],[styles,"href"],[imgs,"src"]],function(grp){
+    f.freach(grp[0],function(o){
+      var out=o[grp[1]].replace(window.location.origin,"");
+      out=out.replace(/\?v=\d+$/,"");
+      dataobj[out]=true;
+    });
+  });
+
+
+  var xhr=new XMLHttpRequest();
+  xhr.open("POST","/listen");
+  xhr.onreadystatechange=function(){
+    if(this.readyState==4){
+      if(/^reload$/.test(this.responseText))
+        setTimeout(function(){
+          window.location.reload();
+        },1000);
+      else
+        f.listen_for_changes();
+    }
+  };
+
+  xhr.send(f.stringify(dataobj));
+  last_listen=xhr;
+};
 
 f.ael(window,"load",function(){
   fix_built_in();
 
   var d=new Date();
-  if(d.toDateString()=="Fri Sep 12 2014") {
-    f.load("/static/canvastry.js");
-  }
+  
+  f.listen_for_changes();
 });
+
 
 })(window);
